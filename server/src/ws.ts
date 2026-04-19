@@ -25,7 +25,7 @@ export function setupWss(server: Server): WebSocketServer {
     clients.add(client);
     console.log(`[ws] raw connection (${clients.size} total)`);
 
-    ws.on("message", (raw) => {
+    ws.on("message", (raw, isBinary) => {
       let msg: Record<string, unknown>;
       try {
         msg = JSON.parse(raw.toString()) as Record<string, unknown>;
@@ -46,12 +46,14 @@ export function setupWss(server: Server): WebSocketServer {
         return;
       }
 
-      // Fan out capture batches to all viewers
+      // Fan out capture batches to all viewers.
+      // Preserve the text/binary flag so the browser receives a text frame
+      // (iOS sends text; re-sending as binary would make JSON.parse fail silently).
       if (client.role === "capture") {
         let sent = 0;
         for (const c of clients) {
           if (c.role === "viewer" && c.ws.readyState === WebSocket.OPEN) {
-            c.ws.send(raw);
+            c.ws.send(raw, { binary: isBinary });
             sent++;
           }
         }
