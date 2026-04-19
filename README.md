@@ -162,3 +162,43 @@ cd ios && xcodegen generate
 - The on-device recording is the source of truth. WebSocket is a preview feed only — dropped packets don't affect the saved session.
 - Don't stream video over WebSocket. Video is written to disk and uploaded as a file on stop.
 - Timestamps are **not** guaranteed monotonic or evenly spaced. The viewer interpolates; the Blender exporter decimates to target fps.
+
+---
+
+## Roadmap
+
+### Data Quality & Reliability
+- [ ] Detect and flag tracking-quality drops: color-code trail segments by `tracking` state (normal/limited/notAvailable) in both viewer and exported Blender curves
+- [ ] Add sensor fusion: blend ARKit pose with 100 Hz IMU via complementary filter to fill gaps when ARKit tracking degrades (e.g. fast pans, low light)
+- [ ] Record and export camera intrinsics per-frame (focal length, principal point, lens distortion coefficients) so VFX compositing tools can match-move accurately
+- [ ] Add NTP-style clock sync between phone and server so multi-device sessions share a common time base
+
+### Multi-Device & Collaboration
+- [ ] Support multiple phones streaming simultaneously with unique device IDs; render each as a separate colored rig in the viewer
+- [ ] Add world-anchor alignment: use a shared ArUco marker or QR code at scene start so multiple phones share a common origin
+- [ ] Room-scale ground-plane calibration: tap three floor points on each phone to establish a shared gravity-aligned coordinate frame
+- [ ] Session merge tool: combine two or more single-device sessions into one timeline with per-device tracks
+
+### Export & Pipeline Integration
+- [ ] Export to FBX and Alembic (`.abc`) for direct import into Maya, Houdini, and Unreal without a Blender round-trip
+- [ ] Add USD export with `UsdGeomCamera` and `UsdGeomXform` for Pixar/Apple pipeline compatibility
+- [ ] Interpolate the decimated Blender keyframes with Bezier handles (auto-compute tangents) instead of linear to reduce keyframe count and improve curve smoothness
+- [ ] Support exporting IMU data as custom Blender channels or CSV sidecar for use in physics simulations or shake analysis
+
+### Viewer & Playback
+- [ ] Add split-screen comparison: play two sessions side by side with synchronized timelines for take comparison
+- [ ] Render a frustum wireframe showing the camera FOV in the 3D view (live and replay) to help operators frame shots
+- [ ] Show IMU graphs (accelerometer, gyroscope) as a dockable panel alongside the 3D view, synced to the playback timeline
+- [ ] Add session metadata overlay: device model, duration, tracking quality percentage, sample rates
+
+### iOS App Hardening
+- [ ] Add background-mode audio session keep-alive so recording survives brief app-switch
+- [ ] Implement automatic reconnection with exponential backoff when WebSocket drops mid-session
+- [ ] Add on-device session trimming: mark in/out points before upload to reduce file size and server storage
+- [ ] Persist unsent sessions to disk and retry upload on next app launch (currently lost if upload fails)
+
+### Server & Infrastructure
+- [ ] Add session-level authentication (token per session ID) to prevent unauthorized viewers from receiving live streams
+- [ ] Implement WebSocket backpressure: if a viewer falls behind, drop intermediate batches rather than buffering unboundedly
+- [ ] Add gzip compression for session upload and download (session JSON can be 10–50 MB for long takes)
+- [ ] Add a `/sessions/:id/export` endpoint that runs the Blender exporter server-side and returns the `.py` file
