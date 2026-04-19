@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useSessionStore } from "./state/session";
 import { useLiveSocket } from "./hooks/useLiveSocket";
 import { LiveMode } from "./modes/LiveMode";
@@ -5,10 +6,48 @@ import { ReplayMode } from "./modes/ReplayMode";
 import { CameraFollowToggle } from "./ui/CameraFollowToggle";
 import { SessionPicker } from "./ui/SessionPicker";
 
+/** Injects a spinning pose batch every 16ms to test the viewer without hardware. */
+function useSimulator() {
+  const simTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const simAngle = useRef(0);
+  const pushLiveBatch = useSessionStore((s) => s.pushLiveBatch);
+
+  function startSim() {
+    if (simTimer.current) return;
+    simTimer.current = setInterval(() => {
+      simAngle.current += 0.03;
+      const a = simAngle.current;
+      // Slow spin around Y axis
+      const qy = Math.sin(a / 2);
+      const qw = Math.cos(a / 2);
+      pushLiveBatch({
+        pose: [{
+          t: performance.now(),
+          p: [0, 0, 0],
+          q: [0, qy, 0, qw],
+          tracking: "normal",
+        }],
+      });
+    }, 16);
+  }
+
+  function stopSim() {
+    if (simTimer.current) {
+      clearInterval(simTimer.current);
+      simTimer.current = null;
+    }
+    useSessionStore.getState().pushLiveBatch({ pose: [] });
+  }
+
+  return { startSim, stopSim };
+}
+
 export default function App() {
   const { connected, batchCount } = useLiveSocket();
   const mode = useSessionStore((s) => s.mode);
   const setMode = useSessionStore((s) => s.setMode);
+  const { startSim, stopSim } = useSimulator();
+  const simRunning = useRef(false);
 
   return (
     <div
@@ -106,6 +145,31 @@ export default function App() {
               </span>
             )}
           </div>
+
+          <span style={{ width: 1, height: 14, background: "var(--border-hi)", display: "block" }} />
+
+          {/* Sim button — spins the model locally, no hardware needed */}
+          <button
+            onClick={() => {
+              simRunning.current = !simRunning.current;
+              simRunning.current ? startSim() : stopSim();
+            }}
+            style={{
+              fontFamily: "var(--cond)",
+              fontWeight: 600,
+              fontSize: 10,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              padding: "2px 8px",
+              borderRadius: 2,
+              border: "1px solid rgba(255,155,56,0.3)",
+              cursor: "pointer",
+              background: "transparent",
+              color: "var(--amber)",
+            }}
+          >
+            SIM
+          </button>
 
           <span style={{ width: 1, height: 14, background: "var(--border-hi)", display: "block" }} />
 

@@ -5,12 +5,10 @@ import * as THREE from "three";
 import { WorldGrid } from "../scene/WorldGrid";
 import { Phone } from "../scene/Phone";
 import { Trail } from "../scene/Trail";
-import { useReplay } from "../hooks/useReplay";
 import { useSessionStore } from "../state/session";
 import { Timeline } from "../ui/Timeline";
 
 function ReplayScene() {
-  const { pose } = useReplay();
   const cameraFollow = useSessionStore((s) => s.cameraFollow);
   return (
     <>
@@ -18,7 +16,7 @@ function ReplayScene() {
       <directionalLight position={[3, 6, 4]} intensity={1.2} color="#ffffff" />
       <pointLight position={[-3, 2, -3]} intensity={0.4} color="#00ffaa" />
       <WorldGrid />
-      <Phone replayPose={pose} />
+      <Phone />
       <Trail />
       <ReplayCameraFollower />
       {!cameraFollow && <OrbitControls makeDefault dampingFactor={0.08} enableDamping />}
