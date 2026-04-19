@@ -44,13 +44,12 @@ export function Phone() {
     }
 
     if (mode === "live") {
-      group.position.set(0, 0, 0);
-
       const poses = store.livePoses;
       if (poses.length > 0) {
-        const q = poses[poses.length - 1].q;
+        const latest = poses[poses.length - 1];
+        group.position.set(latest.p[0], latest.p[1], latest.p[2]);
         targetQuat.current
-          .set(q[0], q[1], q[2], q[3])
+          .set(latest.q[0], latest.q[1], latest.q[2], latest.q[3])
           .multiply(ARKIT_PORTRAIT_CORRECTION);
         group.quaternion.slerp(targetQuat.current, DAMPING);
       } else if (store.liveImuQuat) {
