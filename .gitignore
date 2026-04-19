@@ -1,0 +1,20 @@
+# Xcode
+ios/DerivedData/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xccheckout
+
+# Node
+node_modules/
+dist/
+
+# Sessions data
+sessions/
+
+# OS
+.DS_Store
+.env
+
+# pnpm
+.pnpm-store/

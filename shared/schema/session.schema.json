@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "session.schema.json",
+  "title": "Session",
+  "description": "A phone motion capture session (version 1).",
+  "type": "object",
+  "required": ["version", "id", "createdAt", "device", "pose", "imu", "touches", "markers", "duration"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "integer", "enum": [1] },
+    "id": { "type": "string", "format": "uuid" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "device": {
+      "type": "object",
+      "required": ["model", "iosVersion", "hasLiDAR", "screen"],
+      "additionalProperties": false,
+      "properties": {
+        "model": { "type": "string" },
+        "iosVersion": { "type": "string" },
+        "hasLiDAR": { "type": "boolean" },
+        "screen": {
+          "type": "object",
+          "required": ["width", "height", "scale"],
+          "additionalProperties": false,
+          "properties": {
+            "width": { "type": "number" },
+            "height": { "type": "number" },
+            "scale": { "type": "number" }
+          }
+        }
+      }
+    },
+    "pose": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/PoseSample" }
+    },
+    "imu": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ImuSample" }
+    },
+    "touches": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/TouchEvent" }
+    },
+    "markers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Marker" }
+    },
+    "video": {
+      "type": "object",
+      "required": ["filename", "startOffsetMs", "fps", "codec", "width", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "filename": { "type": "string" },
+        "startOffsetMs": { "type": "number" },
+        "fps": { "type": "number" },
+        "codec": { "type": "string", "enum": ["h264", "hevc"] },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    },
+    "mesh": {
+      "type": "object",
+      "required": ["filename"],
+      "additionalProperties": false,
+      "properties": {
+        "filename": { "type": "string" }
+      }
+    },
+    "duration": { "type": "number", "description": "Session duration in milliseconds." }
+  },
+  "$defs": {
+    "PoseSample": {
+      "type": "object",
+      "required": ["t", "p", "q", "tracking"],
+      "additionalProperties": false,
+      "properties": {
+        "t": { "type": "number", "description": "ms from session start" },
+        "p": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "World position [x, y, z] in meters (ARKit frame)"
+        },
+        "q": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "World orientation [x, y, z, w]"
+        },
+        "tracking": {
+          "type": "string",
+          "enum": ["normal", "limited", "notAvailable"]
+        },
+        "trackingReason": {
+          "type": "string",
+          "enum": ["initializing", "relocalizing", "excessiveMotion", "insufficientFeatures"]
+        }
+      }
+    },
+    "ImuSample": {
+      "type": "object",
+      "required": ["t", "a", "ua", "rr", "qi"],
+      "additionalProperties": false,
+      "properties": {
+        "t": { "type": "number", "description": "ms from session start" },
+        "a": {
+          "type": "array", "items": { "type": "number" },
+          "minItems": 3, "maxItems": 3,
+          "description": "Full acceleration incl. gravity [x, y, z] m/s²"
+        },
+        "ua": {
+          "type": "array", "items": { "type": "number" },
+          "minItems": 3, "maxItems": 3,
+          "description": "User acceleration (gravity removed) [x, y, z] m/s²"
+        },
+        "rr": {
+          "type": "array", "items": { "type": "number" },
+          "minItems": 3, "maxItems": 3,
+          "description": "Rotation rate [x, y, z] rad/s"
+        },
+        "qi": {
+          "type": "array", "items": { "type": "number" },
+          "minItems": 4, "maxItems": 4,
+          "description": "Attitude quaternion from IMU [x, y, z, w]"
+        },
+        "mag": {
+          "type": "array", "items": { "type": "number" },
+          "minItems": 3, "maxItems": 3,
+          "description": "Magnetometer [x, y, z] μT (optional)"
+        }
+      }
+    },
+    "TouchEvent": {
+      "type": "object",
+      "required": ["t", "kind", "id", "x", "y"],
+      "additionalProperties": false,
+      "properties": {
+        "t": { "type": "number" },
+        "kind": { "type": "string", "enum": ["start", "move", "end"] },
+        "id": { "type": "integer" },
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "force": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "Marker": {
+      "type": "object",
+      "required": ["t", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "t": { "type": "number" },
+        "label": { "type": "string" }
+      }
+    }
+  }
+}

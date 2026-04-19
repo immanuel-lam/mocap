@@ -1,0 +1,13 @@
+{
+  "name": "phone-mocap-native",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n server,viewer -c blue,green \"pnpm --filter server dev\" \"pnpm --filter viewer dev\"",
+    "build": "pnpm --filter server build && pnpm --filter viewer build && pnpm --filter @mocap/blender-exporter build",
+    "typecheck": "pnpm --filter server typecheck && pnpm --filter viewer typecheck && pnpm --filter @mocap/blender-exporter typecheck",
+    "export:blender": "pnpm --filter @mocap/blender-exporter start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
