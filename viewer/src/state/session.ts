@@ -66,6 +66,8 @@ interface SessionState {
   liveSessionId: string | null;
   livePoses: PoseSample[];
   liveTouches: TouchEvent[];
+  /** Latest device-attitude quaternion from IMU [x,y,z,w]. Null until first IMU batch. */
+  liveImuQuat: [number, number, number, number] | null;
   pushLiveBatch: (batch: LiveBatch) => void;
 
   replaySession: Session | null;
@@ -94,6 +96,7 @@ export const useSessionStore = create<SessionState>((set) => ({
   liveSessionId: null,
   livePoses: [],
   liveTouches: [],
+  liveImuQuat: null,
   pushLiveBatch: (batch) =>
     set((state) => {
       const nextPoses = batch.pose
@@ -102,10 +105,16 @@ export const useSessionStore = create<SessionState>((set) => ({
       const nextTouches = batch.touches
         ? [...state.liveTouches, ...batch.touches].slice(-MAX_LIVE_TOUCHES)
         : state.liveTouches;
+      // Keep only the latest IMU attitude quaternion for live orientation fallback
+      const lastImu = batch.imu && batch.imu.length > 0 ? batch.imu[batch.imu.length - 1] : null;
+      const nextImuQuat = lastImu
+        ? (lastImu.qi as [number, number, number, number])
+        : state.liveImuQuat;
       return {
         liveSessionId: batch.sessionId ?? state.liveSessionId,
         livePoses: nextPoses,
         liveTouches: nextTouches,
+        liveImuQuat: nextImuQuat,
       };
     }),
 
