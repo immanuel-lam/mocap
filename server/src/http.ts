@@ -7,6 +7,8 @@ import {
   saveSession,
   getSessionJson,
   getSessionVideoPath,
+  deleteSession,
+  clearAllSessions,
 } from "./storage";
 import { getClientStatus } from "./ws";
 
@@ -74,6 +76,20 @@ export function setupHttp(app: express.Application): void {
     }
     res.setHeader("Content-Type", "application/json");
     res.send(buf);
+  });
+
+  // Delete one session
+  app.delete("/sessions/:id", (req: Request, res: Response) => {
+    deleteSession(req.params.id);
+    console.log(`[http] deleted session ${req.params.id}`);
+    res.json({ deleted: req.params.id });
+  });
+
+  // Delete all sessions
+  app.delete("/sessions", (_req: Request, res: Response) => {
+    const count = clearAllSessions();
+    console.log(`[http] cleared ${count} sessions`);
+    res.json({ deleted: count });
   });
 
   // Stream video

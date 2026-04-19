@@ -34,6 +34,17 @@ export function getSessionJson(id: string): Buffer | null {
   return fs.readFileSync(p);
 }
 
+export function deleteSession(id: string): void {
+  const dir = path.join(SESSIONS_DIR, id);
+  if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
+}
+
+export function clearAllSessions(): number {
+  const ids = listSessions();
+  ids.forEach((id) => deleteSession(id));
+  return ids.length;
+}
+
 export function getSessionVideoPath(id: string): string | null {
   const dir = path.join(SESSIONS_DIR, id);
   for (const ext of ["mp4", "mov"]) {

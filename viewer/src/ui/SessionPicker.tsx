@@ -30,6 +30,20 @@ export function SessionPicker() {
     }
   }, []);
 
+  const deleteSession = useCallback(async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await fetch(`/sessions/${id}`, { method: "DELETE" });
+    if (replaySession?.id === id) setReplaySession(null);
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+  }, [replaySession, setReplaySession]);
+
+  const clearAll = useCallback(async () => {
+    if (!confirm(`Delete all ${sessions.length} sessions?`)) return;
+    await fetch("/sessions", { method: "DELETE" });
+    setReplaySession(null);
+    setSessions([]);
+  }, [sessions.length, setReplaySession]);
+
   useEffect(() => { fetchSessions(); }, [fetchSessions]);
 
   const loadSession = useCallback(async (id: string) => {
@@ -68,25 +82,48 @@ export function SessionPicker() {
         >
           Sessions
         </span>
-        <button
-          onClick={fetchSessions}
-          disabled={loading}
-          style={{
-            fontFamily: "var(--cond)",
-            fontWeight: 600,
-            fontSize: 9,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: loading ? "var(--text-dim)" : "var(--text-mid)",
-            background: "none",
-            border: "1px solid var(--border-hi)",
-            borderRadius: 2,
-            padding: "2px 7px",
-            cursor: loading ? "default" : "pointer",
-          }}
-        >
-          {loading ? "···" : "Refresh"}
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={fetchSessions}
+            disabled={loading}
+            style={{
+              fontFamily: "var(--cond)",
+              fontWeight: 600,
+              fontSize: 9,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: loading ? "var(--text-dim)" : "var(--text-mid)",
+              background: "none",
+              border: "1px solid var(--border-hi)",
+              borderRadius: 2,
+              padding: "2px 7px",
+              cursor: loading ? "default" : "pointer",
+            }}
+          >
+            {loading ? "···" : "↺"}
+          </button>
+          {sessions.length > 0 && (
+            <button
+              onClick={clearAll}
+              title="Delete all sessions"
+              style={{
+                fontFamily: "var(--cond)",
+                fontWeight: 600,
+                fontSize: 9,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "var(--red, #ff4444)",
+                background: "none",
+                border: "1px solid rgba(255,68,68,0.3)",
+                borderRadius: 2,
+                padding: "2px 7px",
+                cursor: "pointer",
+              }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Error */}
@@ -174,6 +211,24 @@ export function SessionPicker() {
                 >
                   #{String(i + 1).padStart(2, "0")}
                 </span>
+                <button
+                  onClick={(e) => deleteSession(s.id, e)}
+                  title="Delete session"
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: "0 2px",
+                    cursor: "pointer",
+                    color: "var(--text-dim)",
+                    fontSize: 11,
+                    lineHeight: 1,
+                    opacity: 0.5,
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.color = "#ff4444"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.5"; (e.currentTarget as HTMLElement).style.color = "var(--text-dim)"; }}
+                >
+                  ✕
+                </button>
               </div>
               <span
                 style={{
