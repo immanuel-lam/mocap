@@ -7,6 +7,17 @@ import { useReplay } from "../hooks/useReplay";
 
 const DAMPING = 0.25;
 
+/**
+ * ARKit's back camera sensor is physically mounted in landscape orientation.
+ * frame.camera.transform uses the sensor's native frame, not the portrait UI frame.
+ * Correct by right-multiplying (local-space) a fixed +90° rotation around Z.
+ * Applied once at module level — it never changes.
+ */
+const ARKIT_PORTRAIT_CORRECTION = new THREE.Quaternion().setFromAxisAngle(
+  new THREE.Vector3(0, 0, 1),
+  Math.PI / 2
+);
+
 export function Phone() {
   const groupRef = useRef<THREE.Group>(null);
   const targetQuat = useRef(new THREE.Quaternion());
@@ -23,24 +34,24 @@ export function Phone() {
     const mode = store.mode;
 
     if (mode === "replay") {
-      // Access getter here (inside useFrame) so we get the current value.
       const rp = replayResult.pose;
       if (rp) {
         group.position.copy(rp.position);
-        group.quaternion.copy(rp.quaternion);
+        // Apply portrait correction to replay data (same sensor offset as live).
+        group.quaternion.copy(rp.quaternion).multiply(ARKIT_PORTRAIT_CORRECTION);
       }
       return;
     }
 
     if (mode === "live") {
-      // Fix position at origin — pure tilt demo, no world-space drift.
       group.position.set(0, 0, 0);
 
       const poses = store.livePoses;
       if (poses.length > 0) {
-        // ARKit quaternion: Y-up, same handedness as Three.js — no conversion.
         const q = poses[poses.length - 1].q;
-        targetQuat.current.set(q[0], q[1], q[2], q[3]);
+        targetQuat.current
+          .set(q[0], q[1], q[2], q[3])
+          .multiply(ARKIT_PORTRAIT_CORRECTION);
         group.quaternion.slerp(targetQuat.current, DAMPING);
       } else if (store.liveImuQuat) {
         // IMU fallback: xArbitraryZVertical (Z-up). Remap to Y-up.
