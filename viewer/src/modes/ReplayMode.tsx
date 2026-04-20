@@ -12,6 +12,7 @@ function ReplayScene() {
   const cameraFollow = useSessionStore((s) => s.cameraFollow);
   return (
     <>
+      <color attach="background" args={["#dcdce8"]} />
       <ambientLight intensity={0.9} color="#ffffff" />
       <directionalLight position={[3, 6, 4]} intensity={1.0} color="#ffffff" />
       <pointLight position={[-3, 2, -3]} intensity={0.3} color="#c0d0ff" />

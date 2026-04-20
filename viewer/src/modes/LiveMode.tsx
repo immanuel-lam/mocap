@@ -153,6 +153,7 @@ export function LiveMode() {
         <directionalLight position={[3, 6, 4]} intensity={1.0} color="#ffffff" />
         <pointLight position={[-2, 2, -2]} intensity={0.3} color="#c0d0ff" />
 
+        <color attach="background" args={["#dcdce8"]} />
         <WorldGrid />
         <Phone />
         <Trail />
