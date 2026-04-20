@@ -11,7 +11,6 @@ const DAMPING = 0.25;
  * ARKit's back camera sensor is physically mounted in landscape orientation.
  * frame.camera.transform uses the sensor's native frame, not the portrait UI frame.
  * Correct by right-multiplying (local-space) a fixed +90° rotation around Z.
- * Applied once at module level — it never changes.
  */
 const ARKIT_PORTRAIT_CORRECTION = new THREE.Quaternion().setFromAxisAngle(
   new THREE.Vector3(0, 0, 1),
@@ -22,8 +21,6 @@ export function Phone() {
   const groupRef = useRef<THREE.Group>(null);
   const targetQuat = useRef(new THREE.Quaternion());
 
-  // useReplay drives playback time and returns the interpolated pose via
-  // a getter — must be accessed inside useFrame, not destructured eagerly.
   const replayResult = useReplay();
 
   useFrame(() => {
@@ -37,7 +34,6 @@ export function Phone() {
       const rp = replayResult.pose;
       if (rp) {
         group.position.copy(rp.position);
-        // Apply portrait correction to replay data (same sensor offset as live).
         group.quaternion.copy(rp.quaternion).multiply(ARKIT_PORTRAIT_CORRECTION);
       }
       return;
@@ -53,7 +49,6 @@ export function Phone() {
           .multiply(ARKIT_PORTRAIT_CORRECTION);
         group.quaternion.slerp(targetQuat.current, DAMPING);
       } else if (store.liveImuQuat) {
-        // IMU fallback: xArbitraryZVertical (Z-up). Remap to Y-up.
         const [ix, iy, iz, iw] = store.liveImuQuat;
         const imuQ = new THREE.Quaternion(ix, iy, iz, iw);
         const reframe = new THREE.Quaternion().setFromEuler(
@@ -67,46 +62,47 @@ export function Phone() {
 
   return (
     <group ref={groupRef}>
+      {/* Body — medium slate grey, visible against dark bg */}
       <RoundedBox args={[0.072, 0.147, 0.008]} radius={0.008} smoothness={4}>
-        <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.6} />
+        <meshStandardMaterial color="#5c5c72" roughness={0.3} metalness={0.7} />
       </RoundedBox>
 
-      {/* Screen face on +Z side */}
+      {/* Screen */}
       <mesh position={[0, 0, 0.0041]}>
         <planeGeometry args={[0.06, 0.13]} />
         <meshStandardMaterial
-          color="#111122"
-          emissive="#223366"
-          emissiveIntensity={0.6}
+          color="#0a0a18"
+          emissive="#1a2866"
+          emissiveIntensity={0.8}
         />
       </mesh>
 
       {/* Camera dot */}
       <mesh position={[0, 0.063, 0.0042]}>
         <circleGeometry args={[0.004, 16]} />
-        <meshStandardMaterial color="#050510" />
+        <meshStandardMaterial color="#040410" />
       </mesh>
 
-      {/* Axis arrows: R=X G=Y B=Z(screen normal) */}
+      {/* Axis arrows: R=X G=Y B=Z */}
       <primitive
         object={new THREE.ArrowHelper(
           new THREE.Vector3(1, 0, 0),
           new THREE.Vector3(0, 0, 0),
-          0.06, 0xff3333, 0.012, 0.008
+          0.06, 0xe03030, 0.012, 0.008
         )}
       />
       <primitive
         object={new THREE.ArrowHelper(
           new THREE.Vector3(0, 1, 0),
           new THREE.Vector3(0, 0, 0),
-          0.06, 0x33ff66, 0.012, 0.008
+          0.06, 0x30c060, 0.012, 0.008
         )}
       />
       <primitive
         object={new THREE.ArrowHelper(
           new THREE.Vector3(0, 0, 1),
           new THREE.Vector3(0, 0, 0),
-          0.06, 0x3388ff, 0.012, 0.008
+          0.06, 0x3070e0, 0.012, 0.008
         )}
       />
     </group>

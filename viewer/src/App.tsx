@@ -17,7 +17,6 @@ function useSimulator() {
     simTimer.current = setInterval(() => {
       simAngle.current += 0.03;
       const a = simAngle.current;
-      // Slow spin around Y axis
       const qy = Math.sin(a / 2);
       const qw = Math.cos(a / 2);
       pushLiveBatch({
@@ -50,89 +49,85 @@ export default function App() {
   const simRunning = useRef(false);
 
   return (
-    <div
-      className="flex flex-col h-full w-full"
-      style={{ background: "var(--bg)" }}
-    >
+    <div className="flex flex-col h-full w-full" style={{ background: "var(--bg)" }}>
+
       {/* ── Top bar ─────────────────────────────────────────── */}
       <header
-        className="flex items-center justify-between shrink-0 px-4"
+        className="flex items-center shrink-0 px-3"
         style={{
-          height: 38,
+          height: 34,
           background: "var(--panel)",
           borderBottom: "1px solid var(--border)",
+          gap: 0,
         }}
       >
-        {/* Left: logo + mode tabs */}
-        <div className="flex items-center gap-5">
-          {/* Wordmark */}
-          <span
-            style={{
-              fontFamily: "var(--cond)",
-              fontWeight: 700,
-              fontSize: 15,
-              letterSpacing: "0.18em",
-              color: "var(--green)",
-              textShadow: "var(--green-glow)",
-              textTransform: "uppercase",
-            }}
-          >
-            MoCap
-          </span>
+        {/* Wordmark */}
+        <span
+          style={{
+            fontFamily: "var(--cond)",
+            fontWeight: 700,
+            fontSize: 13,
+            letterSpacing: "0.22em",
+            color: "var(--text-mid)",
+            textTransform: "uppercase",
+            paddingRight: 16,
+          }}
+        >
+          MoCap
+        </span>
 
-          {/* Divider */}
-          <span style={{ width: 1, height: 18, background: "var(--border-hi)", display: "block" }} />
-
-          {/* Mode tabs */}
-          <div className="flex items-center gap-px" style={{ background: "var(--bg)", borderRadius: 3, padding: 2 }}>
-            {(["live", "replay"] as const).map((m) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                style={{
-                  fontFamily: "var(--cond)",
-                  fontWeight: 600,
-                  fontSize: 11,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  padding: "3px 12px",
-                  borderRadius: 2,
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "all 0.15s",
-                  background: mode === m ? "var(--green-dim)" : "transparent",
-                  color: mode === m ? "var(--green)" : "var(--text-mid)",
-                  boxShadow: mode === m ? "inset 0 0 0 1px rgba(5,150,105,0.2)" : "none",
-                  textShadow: mode === m ? "var(--green-glow)" : "none",
-                }}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
+        {/* Mode tabs */}
+        <div
+          className="flex items-stretch h-full"
+          style={{ gap: 1, marginRight: "auto" }}
+        >
+          {(["live", "replay"] as const).map((m) => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              style={{
+                fontFamily: "var(--cond)",
+                fontWeight: 600,
+                fontSize: 10,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                padding: "0 14px",
+                border: "none",
+                borderBottom: mode === m
+                  ? "2px solid var(--amber)"
+                  : "2px solid transparent",
+                cursor: "pointer",
+                background: "transparent",
+                color: mode === m ? "var(--amber)" : "var(--text-dim)",
+                transition: "color 0.1s, border-color 0.1s",
+              }}
+            >
+              {m}
+            </button>
+          ))}
         </div>
 
-        {/* Right: WS status + camera toggle */}
-        <div className="flex items-center gap-4">
-          {/* Connection LED */}
-          <div className="flex items-center gap-2">
+        {/* Right cluster */}
+        <div className="flex items-center" style={{ gap: 12 }}>
+
+          {/* Connection */}
+          <div className="flex items-center" style={{ gap: 6 }}>
             <span
               className={connected ? "led-live" : ""}
               style={{
                 display: "inline-block",
-                width: 6,
-                height: 6,
+                width: 5,
+                height: 5,
                 borderRadius: "50%",
                 background: connected ? "var(--green)" : "var(--text-dim)",
-                boxShadow: connected ? "var(--green-glow)" : "none",
               }}
             />
             <span
               style={{
                 fontFamily: "var(--cond)",
                 fontSize: 10,
-                fontWeight: 500,
-                letterSpacing: "0.1em",
+                fontWeight: 600,
+                letterSpacing: "0.15em",
                 textTransform: "uppercase",
                 color: connected ? "var(--green)" : "var(--text-dim)",
               }}
@@ -140,15 +135,22 @@ export default function App() {
               {connected ? "Live" : "Offline"}
             </span>
             {batchCount > 0 && (
-              <span style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--amber)", marginLeft: 2 }}>
+              <span
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: 9,
+                  color: "var(--amber)",
+                  letterSpacing: "0.04em",
+                }}
+              >
                 {batchCount}▲
               </span>
             )}
           </div>
 
-          <span style={{ width: 1, height: 14, background: "var(--border-hi)", display: "block" }} />
+          <span style={{ width: 1, height: 12, background: "var(--border-hi)" }} />
 
-          {/* Sim button — spins the model locally, no hardware needed */}
+          {/* SIM */}
           <button
             onClick={() => {
               simRunning.current = !simRunning.current;
@@ -157,21 +159,29 @@ export default function App() {
             style={{
               fontFamily: "var(--cond)",
               fontWeight: 600,
-              fontSize: 10,
-              letterSpacing: "0.12em",
+              fontSize: 9,
+              letterSpacing: "0.18em",
               textTransform: "uppercase",
               padding: "2px 8px",
-              borderRadius: 2,
-              border: "1px solid rgba(255,155,56,0.3)",
+              border: "1px solid var(--border-hi)",
               cursor: "pointer",
               background: "transparent",
-              color: "var(--amber)",
+              color: "var(--text-dim)",
+              transition: "color 0.1s, border-color 0.1s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "var(--amber)";
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--amber)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "var(--text-dim)";
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--border-hi)";
             }}
           >
-            SIM
+            Sim
           </button>
 
-          <span style={{ width: 1, height: 14, background: "var(--border-hi)", display: "block" }} />
+          <span style={{ width: 1, height: 12, background: "var(--border-hi)" }} />
 
           <CameraFollowToggle />
         </div>
@@ -183,7 +193,7 @@ export default function App() {
         <aside
           className="shrink-0 flex flex-col overflow-hidden"
           style={{
-            width: 200,
+            width: 192,
             borderRight: "1px solid var(--border)",
             background: "var(--panel)",
           }}

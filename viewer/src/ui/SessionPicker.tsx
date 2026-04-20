@@ -6,7 +6,6 @@ function shortId(id: string) {
   return id.slice(0, 8).toUpperCase();
 }
 
-
 export function SessionPicker() {
   const [sessions, setSessions] = useState<{ id: string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -64,7 +63,7 @@ export function SessionPicker() {
       <div
         className="flex items-center justify-between px-3"
         style={{
-          height: 34,
+          height: 30,
           borderBottom: "1px solid var(--border)",
           background: "var(--panel-2)",
           flexShrink: 0,
@@ -74,10 +73,10 @@ export function SessionPicker() {
           style={{
             fontFamily: "var(--cond)",
             fontWeight: 700,
-            fontSize: 10,
-            letterSpacing: "0.2em",
+            fontSize: 9,
+            letterSpacing: "0.22em",
             textTransform: "uppercase",
-            color: "var(--text-mid)",
+            color: "var(--text-dim)",
           }}
         >
           Sessions
@@ -90,13 +89,10 @@ export function SessionPicker() {
               fontFamily: "var(--cond)",
               fontWeight: 600,
               fontSize: 9,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
               color: loading ? "var(--text-dim)" : "var(--text-mid)",
               background: "none",
-              border: "1px solid var(--border-hi)",
-              borderRadius: 2,
-              padding: "2px 7px",
+              border: "none",
+              padding: "2px 4px",
               cursor: loading ? "default" : "pointer",
             }}
           >
@@ -105,20 +101,21 @@ export function SessionPicker() {
           {sessions.length > 0 && (
             <button
               onClick={clearAll}
-              title="Delete all sessions"
               style={{
                 fontFamily: "var(--cond)",
                 fontWeight: 600,
                 fontSize: 9,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
-                color: "var(--red, #ff4444)",
+                color: "var(--red)",
                 background: "none",
-                border: "1px solid rgba(255,68,68,0.3)",
-                borderRadius: 2,
-                padding: "2px 7px",
+                border: "none",
+                padding: "2px 4px",
                 cursor: "pointer",
+                opacity: 0.6,
               }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.6"; }}
             >
               Clear
             </button>
@@ -130,9 +127,9 @@ export function SessionPicker() {
       {error && (
         <div
           className="px-3 py-1"
-          style={{ color: "var(--red)", fontFamily: "var(--mono)", fontSize: 9 }}
+          style={{ color: "var(--red)", fontFamily: "var(--mono)", fontSize: 9, opacity: 0.8 }}
         >
-          ✕ {error}
+          {error}
         </div>
       )}
 
@@ -143,13 +140,14 @@ export function SessionPicker() {
             className="flex-1 flex flex-col items-center justify-center gap-2"
             style={{ color: "var(--text-dim)" }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.3 }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.3 }}>
               <rect x="3" y="6" width="18" height="14" rx="1" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M3 10h18" stroke="currentColor" strokeWidth="1.5"/>
-              <circle cx="7" cy="8" r="1" fill="currentColor"/>
-              <circle cx="10" cy="8" r="1" fill="currentColor"/>
             </svg>
-            <span style={{ fontFamily: "var(--cond)", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            <span style={{
+              fontFamily: "var(--cond)", fontSize: 9,
+              letterSpacing: "0.14em", textTransform: "uppercase",
+            }}>
               No recordings
             </span>
           </div>
@@ -163,15 +161,12 @@ export function SessionPicker() {
               onClick={() => loadSession(s.id)}
               style={{
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: 2,
-                padding: "8px 12px",
+                alignItems: "center",
+                gap: 8,
+                padding: "0 10px",
+                height: 30,
                 borderBottom: "1px solid var(--border)",
-                borderLeft: isActive
-                  ? "2px solid var(--green)"
-                  : "2px solid transparent",
-                background: isActive ? "var(--green-dim)" : "transparent",
+                background: isActive ? "var(--amber-dim)" : "transparent",
                 cursor: "pointer",
                 textAlign: "left",
                 transition: "background 0.1s",
@@ -183,67 +178,64 @@ export function SessionPicker() {
                 if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent";
               }}
             >
-              <div className="flex items-center gap-2 w-full">
-                <span
-                  style={{
-                    fontFamily: "var(--mono)",
-                    fontWeight: 500,
-                    fontSize: 11,
-                    letterSpacing: "0.06em",
-                    color: isActive ? "var(--green)" : "var(--text)",
-                    textShadow: isActive ? "var(--green-glow)" : "none",
-                  }}
-                >
-                  {shortId(s.id)}
-                </span>
-                <span
-                  style={{
-                    marginLeft: "auto",
-                    fontFamily: "var(--cond)",
-                    fontSize: 9,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: isActive ? "rgba(61,255,143,0.5)" : "var(--text-dim)",
-                    background: "var(--border)",
-                    padding: "1px 4px",
-                    borderRadius: 1,
-                  }}
-                >
-                  #{String(i + 1).padStart(2, "0")}
-                </span>
-                <button
-                  onClick={(e) => deleteSession(s.id, e)}
-                  title="Delete session"
-                  style={{
-                    background: "none",
-                    border: "none",
-                    padding: "0 2px",
-                    cursor: "pointer",
-                    color: "var(--text-dim)",
-                    fontSize: 11,
-                    lineHeight: 1,
-                    opacity: 0.5,
-                  }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; (e.currentTarget as HTMLElement).style.color = "#ff4444"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.5"; (e.currentTarget as HTMLElement).style.color = "var(--text-dim)"; }}
-                >
-                  ✕
-                </button>
-              </div>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 3,
+                  height: 3,
+                  borderRadius: "50%",
+                  background: isActive ? "var(--amber)" : "var(--border-hi)",
+                  flexShrink: 0,
+                }}
+              />
               <span
                 style={{
                   fontFamily: "var(--mono)",
-                  fontSize: 9,
-                  color: "var(--text-dim)",
-                  letterSpacing: "0.04em",
+                  fontSize: 10,
+                  letterSpacing: "0.06em",
+                  color: isActive ? "var(--amber)" : "var(--text)",
+                  flex: 1,
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
-                  maxWidth: "100%",
                 }}
               >
-                {s.id}
+                {shortId(s.id)}
               </span>
+              <span
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: 8,
+                  color: "var(--text-dim)",
+                  flexShrink: 0,
+                }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <button
+                onClick={(e) => deleteSession(s.id, e)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: "0 2px",
+                  cursor: "pointer",
+                  color: "var(--text-dim)",
+                  fontSize: 10,
+                  lineHeight: 1,
+                  opacity: 0.4,
+                  flexShrink: 0,
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.opacity = "1";
+                  (e.currentTarget as HTMLElement).style.color = "var(--red)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.opacity = "0.4";
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-dim)";
+                }}
+              >
+                ✕
+              </button>
             </button>
           );
         })}

@@ -28,7 +28,16 @@ export function Timeline() {
     return (
       <div
         className="flex items-center justify-center"
-        style={{ height: 64, background: "var(--panel)", borderTop: "1px solid var(--border)", color: "var(--text-dim)", fontFamily: "var(--cond)", letterSpacing: "0.1em", textTransform: "uppercase", fontSize: 10 }}
+        style={{
+          height: 56,
+          background: "var(--panel)",
+          borderTop: "1px solid var(--border)",
+          color: "var(--text-dim)",
+          fontFamily: "var(--cond)",
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          fontSize: 9,
+        }}
       >
         No session loaded
       </div>
@@ -39,34 +48,20 @@ export function Timeline() {
   const progress = duration > 0 ? (playbackT / duration) * 100 : 0;
 
   return (
-    <div
-      style={{
-        background: "var(--panel)",
-        borderTop: "1px solid var(--border)",
-        userSelect: "none",
-      }}
-    >
-      {/* ── Track area ─────────────────────────────────── */}
-      <div style={{ position: "relative", height: 28, borderBottom: "1px solid var(--border)" }}>
-        {/* Track background — subtle tape-strip texture */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "var(--panel-2)",
-          }}
-        />
+    <div style={{ background: "var(--panel)", borderTop: "1px solid var(--border)", userSelect: "none" }}>
+
+      {/* ── Track ─────────────────────────────────────── */}
+      <div style={{ position: "relative", height: 24, borderBottom: "1px solid var(--border)" }}>
+        <div style={{ position: "absolute", inset: 0, background: "var(--panel-2)" }} />
 
         {/* Progress fill */}
         <div
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            bottom: 0,
+            top: 0, left: 0, bottom: 0,
             width: `${progress}%`,
-            background: "linear-gradient(to right, rgba(5,150,105,0.08), rgba(5,150,105,0.04))",
-            borderRight: "1px solid rgba(5,150,105,0.2)",
+            background: "rgba(224,124,42,0.06)",
+            borderRight: "1px solid rgba(224,124,42,0.2)",
             pointerEvents: "none",
           }}
         />
@@ -78,25 +73,22 @@ export function Timeline() {
             title={m.label}
             style={{
               position: "absolute",
-              top: 0,
-              bottom: 0,
+              top: 0, bottom: 0,
               left: `${(m.t / duration) * 100}%`,
               width: 1,
               background: "var(--amber)",
-              boxShadow: "var(--amber-glow)",
               pointerEvents: "none",
             }}
           >
             <span
               style={{
                 position: "absolute",
-                top: 2,
-                left: 3,
+                top: 2, left: 3,
                 fontFamily: "var(--mono)",
-                fontSize: 8,
+                fontSize: 7,
                 color: "var(--amber)",
                 whiteSpace: "nowrap",
-                letterSpacing: "0.04em",
+                opacity: 0.7,
               }}
             >
               {m.label}
@@ -104,9 +96,9 @@ export function Timeline() {
           </div>
         ))}
 
-        {/* Touch ticks — tiny dots at the bottom */}
+        {/* Touch ticks */}
         {session.touches
-          .filter((_, i) => i % 3 === 0)  // thin out dense sequences
+          .filter((_, i) => i % 3 === 0)
           .map((te, i) => (
             <div
               key={`t-${i}`}
@@ -115,14 +107,14 @@ export function Timeline() {
                 bottom: 0,
                 left: `${(te.t / duration) * 100}%`,
                 width: 1,
-                height: 4,
-                background: "rgba(5,150,105,0.35)",
+                height: 3,
+                background: "rgba(224,124,42,0.3)",
                 pointerEvents: "none",
               }}
             />
           ))}
 
-        {/* Scrubber input — sits on top, transparent hit area */}
+        {/* Scrubber */}
         <input
           type="range"
           min={0}
@@ -141,27 +133,23 @@ export function Timeline() {
           }}
         />
 
-        {/* Playhead — rendered on top */}
+        {/* Playhead */}
         <div
           style={{
             position: "absolute",
-            top: 0,
-            bottom: 0,
+            top: 0, bottom: 0,
             left: `${progress}%`,
-            width: 2,
-            background: "var(--green)",
-            boxShadow: "var(--green-glow)",
+            width: 1,
+            background: "var(--amber)",
             pointerEvents: "none",
             zIndex: 5,
           }}
         />
       </div>
 
-      {/* ── Controls row ───────────────────────────────── */}
-      <div
-        className="flex items-center gap-4 px-3"
-        style={{ height: 36 }}
-      >
+      {/* ── Controls ──────────────────────────────────── */}
+      <div className="flex items-center gap-4 px-3" style={{ height: 32 }}>
+
         {/* Play/Pause */}
         <button
           onClick={() => {
@@ -169,51 +157,46 @@ export function Timeline() {
             setPlaying(!playing);
           }}
           style={{
-            width: 26,
-            height: 26,
+            width: 22,
+            height: 22,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "var(--green-dim)",
-            border: "1px solid rgba(5,150,105,0.2)",
-            borderRadius: 2,
+            background: "var(--amber-dim)",
+            border: "1px solid rgba(224,124,42,0.25)",
             cursor: "pointer",
-            color: "var(--green)",
+            color: "var(--amber)",
             flexShrink: 0,
           }}
         >
           {playing ? (
-            /* Pause icon */
-            <svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor">
-              <rect x="0" y="0" width="3" height="10"/>
-              <rect x="6" y="0" width="3" height="10"/>
+            <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor">
+              <rect x="0" y="0" width="2.5" height="9"/>
+              <rect x="5.5" y="0" width="2.5" height="9"/>
             </svg>
           ) : (
-            /* Play icon */
-            <svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor">
-              <path d="M0 0 L9 5 L0 10 Z"/>
+            <svg width="8" height="9" viewBox="0 0 8 9" fill="currentColor">
+              <path d="M0 0 L8 4.5 L0 9 Z"/>
             </svg>
           )}
         </button>
 
-        {/* Speed selector */}
-        <div className="flex items-center gap-px">
+        {/* Speed */}
+        <div className="flex items-center" style={{ gap: 1 }}>
           {SPEED_OPTIONS.map((s) => (
             <button
               key={s}
               onClick={() => setSpeed(s)}
               style={{
                 fontFamily: "var(--mono)",
-                fontSize: 9,
-                letterSpacing: "0.04em",
-                padding: "2px 7px",
+                fontSize: 8,
+                padding: "1px 6px",
                 border: "1px solid",
-                borderRadius: 1,
                 cursor: "pointer",
                 transition: "all 0.1s",
-                borderColor: speed === s ? "rgba(5,150,105,0.3)" : "var(--border-hi)",
-                background: speed === s ? "var(--green-dim)" : "transparent",
-                color: speed === s ? "var(--green)" : "var(--text-dim)",
+                borderColor: speed === s ? "rgba(224,124,42,0.35)" : "var(--border)",
+                background: speed === s ? "var(--amber-dim)" : "transparent",
+                color: speed === s ? "var(--amber)" : "var(--text-dim)",
               }}
             >
               {s}×
@@ -221,15 +204,14 @@ export function Timeline() {
           ))}
         </div>
 
-        {/* Spacer */}
         <div style={{ flex: 1 }} />
 
-        {/* Time display */}
-        <div className="flex items-baseline gap-1">
+        {/* Time */}
+        <div className="flex items-baseline" style={{ gap: 4 }}>
           <span
             style={{
               fontFamily: "var(--mono)",
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 300,
               letterSpacing: "0.04em",
               color: "var(--text)",
@@ -238,11 +220,11 @@ export function Timeline() {
           >
             {formatTime(playbackT)}
           </span>
-          <span style={{ color: "var(--text-dim)", fontSize: 10 }}>/</span>
+          <span style={{ color: "var(--text-dim)", fontSize: 9 }}>/</span>
           <span
             style={{
               fontFamily: "var(--mono)",
-              fontSize: 10,
+              fontSize: 9,
               color: "var(--text-dim)",
               fontVariantNumeric: "tabular-nums",
             }}

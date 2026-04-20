@@ -45,6 +45,20 @@ Phases 0–6 complete. All phases implemented and verified:
 
 Note: After adding new Swift files, run `xcodegen generate` from ios/ before building.
 
+## Design Context
+
+**Brand personality**: Precise. Cinematic. Instrumental.
+Audience is VFX/animation studios — professional context, used during shoots and in grading suites.
+
+- **Theme**: Dark UI always. Professionals work in dark rooms; light mode causes eye strain on long sessions.
+- **Palette**: Near-black surfaces (#0e0e12, #141418) tinted cool blue-grey. Amber accent (#e07c2a) for active/recording state (like timecode displays). Green only for tracking-quality confirmation. No color for decoration.
+- **Typography**: Barlow Condensed for UI chrome/labels. Monospace only for numerical values.
+- **Density**: Data-rich, tight panels. Viewport is the centerpiece — chrome recedes.
+- **Motion**: Only for functional state changes. No decorative animation.
+- **Color rule**: Color communicates state (amber=active, green=tracking, red=error), never brand identity.
+
+Full context in `.impeccable.md`.
+
 ## Running it
 - `pnpm dev` — server + viewer in watch mode
 - Xcode: open `ios/MocapCapture.xcodeproj`, pick your device, Cmd+R. Must run

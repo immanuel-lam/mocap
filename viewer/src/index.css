@@ -4,33 +4,36 @@
 
 /* ── Palette ─────────────────────────────────────────────────── */
 :root {
-  /* Backgrounds */
-  --bg:        #ededf2;
-  --panel:     #ffffff;
-  --panel-2:   #f5f5f9;
+  /* Surfaces — cold blue-grey tinted near-black */
+  --bg:        #0c0c12;
+  --panel:     #111117;
+  --panel-2:   #18181f;
 
   /* Borders */
-  --border:    #e0e0ea;
-  --border-hi: #c4c4d4;
+  --border:    #222230;
+  --border-hi: #30303f;
 
-  /* Accent — deep emerald (brand green, readable on light) */
-  --green:      #059669;
-  --green-dim:  rgba(5, 150, 105, 0.08);
-  --green-glow: 0 0 0 1px rgba(5, 150, 105, 0.25);
+  /* Amber — active / operational / data-flowing */
+  --amber:      #e07c2a;
+  --amber-dim:  rgba(224, 124, 42, 0.1);
+  --amber-glow: 0 0 0 1px rgba(224, 124, 42, 0.35);
 
-  /* Status */
-  --red:        #dc2626;
-  --amber:      #b45309;
-  --amber-dim:  rgba(180, 83, 9, 0.08);
-  --amber-glow: 0 0 0 1px rgba(180, 83, 9, 0.25);
+  /* Green — tracking confirmed / signal good */
+  --green:      #28c87a;
+  --green-dim:  rgba(40, 200, 122, 0.08);
+  --green-glow: 0 0 0 1px rgba(40, 200, 122, 0.3);
+
+  /* Red — error / tracking loss */
+  --red:        #e04848;
+  --red-dim:    rgba(224, 72, 72, 0.1);
 
   /* Text */
-  --text:      #18181b;
-  --text-mid:  #6b7280;
-  --text-dim:  #a8a8b8;
+  --text:      #c4c4d4;
+  --text-mid:  #68687e;
+  --text-dim:  #3e3e52;
 
   /* Fonts */
-  --mono: 'DM Mono', 'Fira Code', monospace;
+  --mono: 'Azeret Mono', 'Fira Mono', monospace;
   --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
 }
 
@@ -43,22 +46,22 @@ html, body, #root {
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--mono);
+  font-family: var(--cond);
   font-size: 11px;
   -webkit-font-smoothing: antialiased;
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--panel); }
-::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 0; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
-/* ── Range input (Timeline scrubber) ─────────────────────────── */
+/* ── Range input ─────────────────────────────────────────────── */
 input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
-  height: 3px;
+  height: 2px;
   border-radius: 0;
   cursor: pointer;
   outline: none;
@@ -67,8 +70,8 @@ input[type='range'] {
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 2px;
-  height: 18px;
-  background: var(--green);
+  height: 16px;
+  background: var(--amber);
   cursor: grab;
   border-radius: 0;
 }
@@ -76,24 +79,20 @@ input[type='range']::-webkit-slider-thumb:active {
   cursor: grabbing;
 }
 
-/* ── Utility ─────────────────────────────────────────────────── */
-.glow-green { color: var(--green); }
-.glow-amber { color: var(--amber); }
-
 /* ── LED pulse ───────────────────────────────────────────────── */
 @keyframes led-pulse {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.45; }
+  50%       { opacity: 0.3; }
 }
 .led-live {
-  animation: led-pulse 1.6s ease-in-out infinite;
+  animation: led-pulse 1.4s ease-in-out infinite;
 }
 
 /* ── Viewport fade-in ────────────────────────────────────────── */
 @keyframes fade-in {
-  from { opacity: 0; transform: scale(0.98); }
-  to   { opacity: 1; transform: scale(1); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 .viewport-wrap {
-  animation: fade-in 0.3s ease-out both;
+  animation: fade-in 0.2s ease-out both;
 }

@@ -10,34 +10,43 @@ export function CameraFollowToggle() {
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 8,
+        gap: 6,
         fontFamily: "var(--cond)",
         fontWeight: 600,
-        fontSize: 10,
-        letterSpacing: "0.12em",
+        fontSize: 9,
+        letterSpacing: "0.18em",
         textTransform: "uppercase",
-        color: cameraFollow ? "var(--amber)" : "var(--text-mid)",
-        background: cameraFollow ? "var(--amber-dim)" : "transparent",
-        border: `1px solid ${cameraFollow ? "rgba(255,155,56,0.25)" : "var(--border-hi)"}`,
-        borderRadius: 2,
-        padding: "3px 10px",
+        color: cameraFollow ? "var(--amber)" : "var(--text-dim)",
+        background: "transparent",
+        border: `1px solid ${cameraFollow ? "rgba(224,124,42,0.3)" : "var(--border-hi)"}`,
+        padding: "2px 8px",
         cursor: "pointer",
-        transition: "all 0.15s",
+        transition: "all 0.1s",
+      }}
+      onMouseEnter={(e) => {
+        if (!cameraFollow) {
+          (e.currentTarget as HTMLElement).style.color = "var(--text-mid)";
+          (e.currentTarget as HTMLElement).style.borderColor = "var(--text-dim)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!cameraFollow) {
+          (e.currentTarget as HTMLElement).style.color = "var(--text-dim)";
+          (e.currentTarget as HTMLElement).style.borderColor = "var(--border-hi)";
+        }
       }}
     >
-      {/* Toggle pip */}
       <span
         style={{
           display: "inline-block",
-          width: 5,
-          height: 5,
+          width: 4,
+          height: 4,
           borderRadius: "50%",
           background: cameraFollow ? "var(--amber)" : "var(--text-dim)",
-          boxShadow: cameraFollow ? "var(--amber-glow)" : "none",
-          transition: "all 0.15s",
+          transition: "background 0.1s",
         }}
       />
-      {cameraFollow ? "Following" : "Orbit"}
+      {cameraFollow ? "Follow" : "Orbit"}
     </button>
   );
 }

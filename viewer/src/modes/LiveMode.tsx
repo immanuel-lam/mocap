@@ -17,39 +17,53 @@ function LiveStats() {
     <div
       style={{
         position: "absolute",
-        top: 12,
-        right: 14,
+        top: 10,
+        right: 12,
         display: "flex",
         flexDirection: "column",
-        gap: 3,
+        gap: 4,
         pointerEvents: "none",
       }}
     >
-      <StatLine label="POSE" value={String(poseCount)} />
+      <StatLine label="F" value={String(poseCount)} />
       {latestPose ? (
         <>
           <StatLine label="X" value={fmt(latestPose.p[0])} />
           <StatLine label="Y" value={fmt(latestPose.p[1])} />
           <StatLine label="Z" value={fmt(latestPose.p[2])} />
-          <StatLine label="TRK" value={latestPose.tracking.slice(0, 3).toUpperCase()} />
+          <StatLine
+            label="TRK"
+            value={latestPose.tracking.slice(0, 3).toUpperCase()}
+            accent={latestPose.tracking === "normal" ? "green" : "amber"}
+          />
         </>
       ) : imuQuat ? (
-        <StatLine label="SRC" value="IMU" />
+        <StatLine label="SRC" value="IMU" accent="amber" />
       ) : null}
     </div>
   );
 }
 
-function StatLine({ label, value }: { label: string; value: string }) {
+function StatLine({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string;
+  accent?: "green" | "amber";
+}) {
   return (
-    <div style={{ display: "flex", gap: 6, alignItems: "baseline" }}>
+    <div style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
       <span
         style={{
           fontFamily: "var(--cond)",
           fontSize: 8,
-          letterSpacing: "0.15em",
-          color: "var(--text-dim)",
+          letterSpacing: "0.14em",
+          color: "rgba(180,180,210,0.35)",
           textTransform: "uppercase",
+          width: 20,
+          textAlign: "right",
         }}
       >
         {label}
@@ -58,8 +72,11 @@ function StatLine({ label, value }: { label: string; value: string }) {
         style={{
           fontFamily: "var(--mono)",
           fontSize: 10,
-          color: "var(--green)",
-          textShadow: "var(--green-glow)",
+          color: accent === "green"
+            ? "var(--green)"
+            : accent === "amber"
+            ? "var(--amber)"
+            : "rgba(196,196,212,0.8)",
           fontVariantNumeric: "tabular-nums",
         }}
       >
@@ -70,30 +87,30 @@ function StatLine({ label, value }: { label: string; value: string }) {
 }
 
 function CornerMarks() {
-  const style = (corner: string): React.CSSProperties => ({
+  const s = (corner: string): React.CSSProperties => ({
     position: "absolute",
-    width: 16,
-    height: 16,
+    width: 14,
+    height: 14,
     pointerEvents: "none",
-    ...(corner === "tl"
-      ? { top: 8, left: 8, borderTop: "1px solid rgba(0,0,0,0.15)", borderLeft: "1px solid rgba(0,0,0,0.15)" }
-      : {}),
-    ...(corner === "tr"
-      ? { top: 8, right: 8, borderTop: "1px solid rgba(0,0,0,0.15)", borderRight: "1px solid rgba(0,0,0,0.15)" }
-      : {}),
-    ...(corner === "bl"
-      ? { bottom: 8, left: 8, borderBottom: "1px solid rgba(0,0,0,0.15)", borderLeft: "1px solid rgba(0,0,0,0.15)" }
-      : {}),
-    ...(corner === "br"
-      ? { bottom: 8, right: 8, borderBottom: "1px solid rgba(0,0,0,0.15)", borderRight: "1px solid rgba(0,0,0,0.15)" }
-      : {}),
+    ...(corner === "tl" ? { top: 8, left: 8,
+      borderTop: "1px solid rgba(180,180,220,0.15)",
+      borderLeft: "1px solid rgba(180,180,220,0.15)" } : {}),
+    ...(corner === "tr" ? { top: 8, right: 8,
+      borderTop: "1px solid rgba(180,180,220,0.15)",
+      borderRight: "1px solid rgba(180,180,220,0.15)" } : {}),
+    ...(corner === "bl" ? { bottom: 8, left: 8,
+      borderBottom: "1px solid rgba(180,180,220,0.15)",
+      borderLeft: "1px solid rgba(180,180,220,0.15)" } : {}),
+    ...(corner === "br" ? { bottom: 8, right: 8,
+      borderBottom: "1px solid rgba(180,180,220,0.15)",
+      borderRight: "1px solid rgba(180,180,220,0.15)" } : {}),
   });
   return (
     <>
-      <div style={style("tl")} />
-      <div style={style("tr")} />
-      <div style={style("bl")} />
-      <div style={style("br")} />
+      <div style={s("tl")} />
+      <div style={s("tr")} />
+      <div style={s("bl")} />
+      <div style={s("br")} />
     </>
   );
 }
@@ -108,17 +125,17 @@ function WaitingOverlay() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 8,
+        gap: 6,
         pointerEvents: "none",
       }}
     >
       <span
         style={{
           fontFamily: "var(--cond)",
-          fontSize: 11,
-          letterSpacing: "0.25em",
+          fontSize: 10,
+          letterSpacing: "0.28em",
           textTransform: "uppercase",
-          color: "var(--text-dim)",
+          color: "rgba(180,180,220,0.2)",
         }}
       >
         Awaiting signal
@@ -127,8 +144,7 @@ function WaitingOverlay() {
         style={{
           fontFamily: "var(--mono)",
           fontSize: 9,
-          color: "var(--text-dim)",
-          opacity: 0.5,
+          color: "rgba(180,180,220,0.1)",
         }}
       >
         Start recording on device
@@ -146,14 +162,14 @@ export function LiveMode() {
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <Canvas
         camera={{ position: [0, 0.3, 0.5], fov: 45 }}
-        style={{ width: "100%", height: "100%", background: "#dcdce8" }}
+        style={{ width: "100%", height: "100%" }}
         gl={{ antialias: true, alpha: false }}
       >
-        <ambientLight intensity={0.9} color="#ffffff" />
-        <directionalLight position={[3, 6, 4]} intensity={1.0} color="#ffffff" />
-        <pointLight position={[-2, 2, -2]} intensity={0.3} color="#c0d0ff" />
+        <color attach="background" args={["#18182a"]} />
+        <ambientLight intensity={0.4} color="#8090c0" />
+        <directionalLight position={[4, 8, 4]} intensity={1.8} color="#ffffff" />
+        <pointLight position={[-3, -1, 3]} intensity={0.6} color="#6080c0" />
 
-        <color attach="background" args={["#dcdce8"]} />
         <WorldGrid />
         <Phone />
         <Trail />
