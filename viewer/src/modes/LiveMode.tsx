@@ -2,6 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { WorldGrid } from "../scene/WorldGrid";
 import { Phone } from "../scene/Phone";
+import { Trail } from "../scene/Trail";
 import { useSessionStore } from "../state/session";
 
 function LiveStats() {
@@ -75,16 +76,16 @@ function CornerMarks() {
     height: 16,
     pointerEvents: "none",
     ...(corner === "tl"
-      ? { top: 8, left: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }
+      ? { top: 8, left: 8, borderTop: "1px solid rgba(0,0,0,0.15)", borderLeft: "1px solid rgba(0,0,0,0.15)" }
       : {}),
     ...(corner === "tr"
-      ? { top: 8, right: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }
+      ? { top: 8, right: 8, borderTop: "1px solid rgba(0,0,0,0.15)", borderRight: "1px solid rgba(0,0,0,0.15)" }
       : {}),
     ...(corner === "bl"
-      ? { bottom: 8, left: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }
+      ? { bottom: 8, left: 8, borderBottom: "1px solid rgba(0,0,0,0.15)", borderLeft: "1px solid rgba(0,0,0,0.15)" }
       : {}),
     ...(corner === "br"
-      ? { bottom: 8, right: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }
+      ? { bottom: 8, right: 8, borderBottom: "1px solid rgba(0,0,0,0.15)", borderRight: "1px solid rgba(0,0,0,0.15)" }
       : {}),
   });
   return (
@@ -145,15 +146,16 @@ export function LiveMode() {
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <Canvas
         camera={{ position: [0, 0.3, 0.5], fov: 45 }}
-        style={{ width: "100%", height: "100%", background: "#13131a" }}
+        style={{ width: "100%", height: "100%", background: "#dcdce8" }}
         gl={{ antialias: true, alpha: false }}
       >
-        <ambientLight intensity={0.2} color="#4060ff" />
-        <directionalLight position={[3, 6, 4]} intensity={1.4} color="#ffffff" />
-        <pointLight position={[-2, 2, -2]} intensity={0.5} color="#00ffaa" />
+        <ambientLight intensity={0.9} color="#ffffff" />
+        <directionalLight position={[3, 6, 4]} intensity={1.0} color="#ffffff" />
+        <pointLight position={[-2, 2, -2]} intensity={0.3} color="#c0d0ff" />
 
         <WorldGrid />
         <Phone />
+        <Trail />
         <OrbitControls
           makeDefault
           dampingFactor={0.08}

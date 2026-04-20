@@ -30,5 +30,5 @@ export function Trail() {
 
   if (points.length < 2) return null;
 
-  return <Line points={points} color="#3dff8f" lineWidth={1.5} opacity={0.6} transparent />;
+  return <Line points={points} color="#059669" lineWidth={2} opacity={0.75} transparent />;
 }

@@ -12,9 +12,9 @@ function ReplayScene() {
   const cameraFollow = useSessionStore((s) => s.cameraFollow);
   return (
     <>
-      <ambientLight intensity={0.15} color="#4060ff" />
-      <directionalLight position={[3, 6, 4]} intensity={1.2} color="#ffffff" />
-      <pointLight position={[-3, 2, -3]} intensity={0.4} color="#00ffaa" />
+      <ambientLight intensity={0.9} color="#ffffff" />
+      <directionalLight position={[3, 6, 4]} intensity={1.0} color="#ffffff" />
+      <pointLight position={[-3, 2, -3]} intensity={0.3} color="#c0d0ff" />
       <WorldGrid />
       <Phone />
       <Trail />
@@ -58,10 +58,10 @@ function CornerMarks() {
   const base: React.CSSProperties = { position: "absolute", width: 16, height: 16, pointerEvents: "none" };
   return (
     <>
-      <div style={{ ...base, top: 8, left: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }} />
-      <div style={{ ...base, top: 8, right: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }} />
-      <div style={{ ...base, bottom: 72, left: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }} />
-      <div style={{ ...base, bottom: 72, right: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }} />
+      <div style={{ ...base, top: 8, left: 8, borderTop: "1px solid rgba(0,0,0,0.15)", borderLeft: "1px solid rgba(0,0,0,0.15)" }} />
+      <div style={{ ...base, top: 8, right: 8, borderTop: "1px solid rgba(0,0,0,0.15)", borderRight: "1px solid rgba(0,0,0,0.15)" }} />
+      <div style={{ ...base, bottom: 72, left: 8, borderBottom: "1px solid rgba(0,0,0,0.15)", borderLeft: "1px solid rgba(0,0,0,0.15)" }} />
+      <div style={{ ...base, bottom: 72, right: 8, borderBottom: "1px solid rgba(0,0,0,0.15)", borderRight: "1px solid rgba(0,0,0,0.15)" }} />
     </>
   );
 }
@@ -72,7 +72,7 @@ export function ReplayMode() {
       <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
         <Canvas
           camera={{ position: [2, 2, 2], fov: 55 }}
-          style={{ width: "100%", height: "100%", background: "#13131a" }}
+          style={{ width: "100%", height: "100%", background: "#dcdce8" }}
           gl={{ antialias: true, alpha: false }}
         >
           <ReplayScene />
