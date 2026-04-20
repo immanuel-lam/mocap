@@ -2,9 +2,9 @@ export function WorldGrid() {
   return (
     <>
       {/* Main 1m grid */}
-      <gridHelper args={[10, 10, "#1a1f30", "#111520"]} />
+      <gridHelper args={[10, 10, "#2a2a3a", "#1e1e2c"]} />
       {/* Fine 0.25m subdivision */}
-      <gridHelper args={[10, 40, "#0d1018", "#0d1018"]} />
+      <gridHelper args={[10, 40, "#181824", "#181824"]} />
     </>
   );
 }

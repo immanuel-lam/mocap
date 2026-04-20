@@ -75,16 +75,16 @@ function CornerMarks() {
     height: 16,
     pointerEvents: "none",
     ...(corner === "tl"
-      ? { top: 8, left: 8, borderTop: "1px solid rgba(61,255,143,0.3)", borderLeft: "1px solid rgba(61,255,143,0.3)" }
+      ? { top: 8, left: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }
       : {}),
     ...(corner === "tr"
-      ? { top: 8, right: 8, borderTop: "1px solid rgba(61,255,143,0.3)", borderRight: "1px solid rgba(61,255,143,0.3)" }
+      ? { top: 8, right: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }
       : {}),
     ...(corner === "bl"
-      ? { bottom: 8, left: 8, borderBottom: "1px solid rgba(61,255,143,0.3)", borderLeft: "1px solid rgba(61,255,143,0.3)" }
+      ? { bottom: 8, left: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }
       : {}),
     ...(corner === "br"
-      ? { bottom: 8, right: 8, borderBottom: "1px solid rgba(61,255,143,0.3)", borderRight: "1px solid rgba(61,255,143,0.3)" }
+      ? { bottom: 8, right: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }
       : {}),
   });
   return (
@@ -145,7 +145,7 @@ export function LiveMode() {
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <Canvas
         camera={{ position: [0, 0.3, 0.5], fov: 45 }}
-        style={{ width: "100%", height: "100%", background: "#06070a" }}
+        style={{ width: "100%", height: "100%", background: "#13131a" }}
         gl={{ antialias: true, alpha: false }}
       >
         <ambientLight intensity={0.2} color="#4060ff" />

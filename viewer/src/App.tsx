@@ -102,7 +102,7 @@ export default function App() {
                   transition: "all 0.15s",
                   background: mode === m ? "var(--green-dim)" : "transparent",
                   color: mode === m ? "var(--green)" : "var(--text-mid)",
-                  boxShadow: mode === m ? "inset 0 0 0 1px rgba(61,255,143,0.2)" : "none",
+                  boxShadow: mode === m ? "inset 0 0 0 1px rgba(5,150,105,0.2)" : "none",
                   textShadow: mode === m ? "var(--green-glow)" : "none",
                 }}
               >

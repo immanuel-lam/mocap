@@ -65,8 +65,8 @@ export function Timeline() {
             left: 0,
             bottom: 0,
             width: `${progress}%`,
-            background: "linear-gradient(to right, rgba(61,255,143,0.06), rgba(61,255,143,0.03))",
-            borderRight: "1px solid rgba(61,255,143,0.15)",
+            background: "linear-gradient(to right, rgba(5,150,105,0.08), rgba(5,150,105,0.04))",
+            borderRight: "1px solid rgba(5,150,105,0.2)",
             pointerEvents: "none",
           }}
         />
@@ -116,7 +116,7 @@ export function Timeline() {
                 left: `${(te.t / duration) * 100}%`,
                 width: 1,
                 height: 4,
-                background: "rgba(61,255,143,0.35)",
+                background: "rgba(5,150,105,0.35)",
                 pointerEvents: "none",
               }}
             />
@@ -175,7 +175,7 @@ export function Timeline() {
             alignItems: "center",
             justifyContent: "center",
             background: "var(--green-dim)",
-            border: "1px solid rgba(61,255,143,0.2)",
+            border: "1px solid rgba(5,150,105,0.2)",
             borderRadius: 2,
             cursor: "pointer",
             color: "var(--green)",
@@ -211,7 +211,7 @@ export function Timeline() {
                 borderRadius: 1,
                 cursor: "pointer",
                 transition: "all 0.1s",
-                borderColor: speed === s ? "rgba(61,255,143,0.3)" : "var(--border-hi)",
+                borderColor: speed === s ? "rgba(5,150,105,0.3)" : "var(--border-hi)",
                 background: speed === s ? "var(--green-dim)" : "transparent",
                 color: speed === s ? "var(--green)" : "var(--text-dim)",
               }}

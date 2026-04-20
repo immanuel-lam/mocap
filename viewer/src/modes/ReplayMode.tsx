@@ -58,10 +58,10 @@ function CornerMarks() {
   const base: React.CSSProperties = { position: "absolute", width: 16, height: 16, pointerEvents: "none" };
   return (
     <>
-      <div style={{ ...base, top: 8, left: 8, borderTop: "1px solid rgba(61,255,143,0.3)", borderLeft: "1px solid rgba(61,255,143,0.3)" }} />
-      <div style={{ ...base, top: 8, right: 8, borderTop: "1px solid rgba(61,255,143,0.3)", borderRight: "1px solid rgba(61,255,143,0.3)" }} />
-      <div style={{ ...base, bottom: 72, left: 8, borderBottom: "1px solid rgba(61,255,143,0.3)", borderLeft: "1px solid rgba(61,255,143,0.3)" }} />
-      <div style={{ ...base, bottom: 72, right: 8, borderBottom: "1px solid rgba(61,255,143,0.3)", borderRight: "1px solid rgba(61,255,143,0.3)" }} />
+      <div style={{ ...base, top: 8, left: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }} />
+      <div style={{ ...base, top: 8, right: 8, borderTop: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }} />
+      <div style={{ ...base, bottom: 72, left: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderLeft: "1px solid rgba(255,255,255,0.2)" }} />
+      <div style={{ ...base, bottom: 72, right: 8, borderBottom: "1px solid rgba(255,255,255,0.2)", borderRight: "1px solid rgba(255,255,255,0.2)" }} />
     </>
   );
 }
@@ -72,7 +72,7 @@ export function ReplayMode() {
       <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
         <Canvas
           camera={{ position: [2, 2, 2], fov: 55 }}
-          style={{ width: "100%", height: "100%", background: "#06070a" }}
+          style={{ width: "100%", height: "100%", background: "#13131a" }}
           gl={{ antialias: true, alpha: false }}
         >
           <ReplayScene />
